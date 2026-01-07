@@ -4,7 +4,6 @@ import tkinter as tk
 from typing import TYPE_CHECKING, Tuple, Union
 from functools import partial
 
-
 if TYPE_CHECKING:
     from main import WindowVariable
 
@@ -13,8 +12,8 @@ if TYPE_CHECKING:
 class ContainerManager:
     """
     Gère les conteneurs d'actions (boucles, actions parallèles).
-    Permet a l'utilisateur de savoir s'il est dans un conteneur, qelle est son nom,
-    et de sortir du conteneur actuel. Enregitre le nom de chaque conteneurs. 
+    Permet à l'utilisateur de savoir s'il est dans un conteneur, quelle est son nom,
+    et de sortir du conteneur actuel. Enregistre le nom de chaque conteneur. 
     Gère l'imbrication des conteneurs.
     ------------------------------------------------------------------------------
     Manages action containers (loops, parallel actions).
@@ -23,9 +22,9 @@ class ContainerManager:
     Manages the nesting of containers.
     """
 
-    def __init__(self, w_var, act_selector_frame):
+    def __init__(self, w_var: WindowVariable, act_selector_frame: tk.Frame) -> None:
         """
-        Initialise les variables nessaires pour gérer les conteneurs d'actions.
+        Initialise les variables nécessaires pour gérer les conteneurs d'actions.
         Initialise aussi le cadre et les widgets permettant 
         à l'utilisateur de sortir d'un conteneur.
         
@@ -53,9 +52,10 @@ class ContainerManager:
 
         self._w_var = w_var
 
-        # Fonction qui permet d'ajouter à la liste permettant d'enregistrer 
-        # la suite actions l'information qu'on sort d'un conteneur.
-        # Cette variable est modifier apres l'initialisation de "ContainerManager" 
+        # Fonction qui permet d'ajouter à la liste (la liste 
+        # permettant d'enregistrer la suite actions), l'information qu'on 
+        # sort d'un conteneur.
+        # Cette variable est modifiée après l'initialisation de "ContainerManager" 
         # et c'est à ce moment que la fonction est assignée.
         # -------------------------------------------------------------------------
         # Function that adds to the list for saving the action sequence 
@@ -77,8 +77,7 @@ class ContainerManager:
         # Clé unique pour le dictionnaire des conteneurs
         # ---------------------------------------------
         # Unique key for the container dictionary
-        self._next_container_id = 0
-
+        self._next_container_id = 0 
 
         
         self._leave_container_frame=tk.Frame(act_selector_frame, bg=w_var.color_1)
@@ -151,23 +150,21 @@ class ContainerManager:
         Allows the user to exit the current container.
         Updates the display based on the state of the containers.
         """
-
         # Enregistre la sortie du conteneur dans la liste de sauvegarde.
         # ---------------------------------------------------------------
         # Records the exit from the container in the save list.
         self.leave_container_callback()
 
-        containers_count = len(self.container_map)
         next_active_container = False
 
         # Marque le conteneur actuel comme inactif.
         # --------------------------------------
         # Marks the current container as inactive.
-        for i in range(containers_count):
-            if self.container_map[(containers_count-1)-i][0]:
-                self.container_map[(containers_count-1)-i][0] = False
+        for container_id in reversed(self.container_map.keys()):
+            if self.container_map[container_id][0]: 
+                self.container_map[container_id][0] = False
                 break
-
+        
         # Vérifie s'il reste des conteneurs actifs.
         # ---------------------------------------
         # Checks if there are any active containers left.
@@ -181,7 +178,6 @@ class ContainerManager:
         # Updates the display based on the state of the containers.
         if isinstance(next_active_container, str):
             self.indicate_container(next_active_container)
-
         else:
             self._leave_container_frame.grid_remove()
             self.is_in_container = False
@@ -192,20 +188,14 @@ class ContainerManager:
         """
         Affiche le cadre indiquant à l'utilisateur qu'il est dans un conteneur
         et le nom de ce conteneur.
-        
         :param container_name: Nom du conteneur actuel.
         -----------------------------------------------------------------------
         Displays the frame indicating to the user that they are in a container
         and the name of that container.
-
         :param container_name: Name of the current container.
         """
-        if len(container_name)<=10:
-            self._info_label.config(text=f"You're in the container : {container_name}")
-        elif len(container_name)<=15:
-            self._info_label.config(text=f"You're in the container : \n{container_name}")
-        elif len(container_name)<=20:
-            self._info_label.config(text=f"You're in the container : \n{container_name}")
+        separator = "\n" if len(container_name) > 10 else " "
+        self._info_label.config(text=f"You're in the container :{separator}{container_name}")
         self._leave_container_frame.grid(row=0, column=0, sticky="wen")
 
 
@@ -216,8 +206,8 @@ class ContainerManager:
         """
         Trouve le conteneur le plus imbriqué dans lequel on se trouve actuellement.
         
-        :param act_dict: Dictionnair des action 
-        :param dict_K: Clé du dictionnaire la ou on se trouve actuellement.
+        :param act_dict: Dictionnaire des actions 
+        :param dict_K: Clé du dictionnaire là où on se trouve actuellement.
         :returns: Tuple[int, Union[object, int]] -
             Le nombre de conteneurs imbriqués et l'instance du conteneur le plus imbriqué.
         ----------------------------------------------------------------------------

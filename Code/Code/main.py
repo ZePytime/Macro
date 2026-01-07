@@ -24,11 +24,12 @@ import tkinter as tk
 
 from ui_action_manager import IntfActSelector
 from ui_action_tree import IntfTree
-from ui_sequence_loader import IntfOpenFile
-from ui_documentation import IntfDoc
-from action_classes import Loop, SameTime, KeyLoggerApp, KeyPoisiton
+from ui_sequence_loader import SavedSequencesUI
+from ui_documentation import DocumentationUI
+from action_classes import Loop, SameTime, KeyLoggerApp, KeyPositon
 
 from hotkey_manager import load_shortcuts
+from enums import ShortCut
 
 # Je crée la fenêtre.
 # -------------------
@@ -62,6 +63,9 @@ class WindowVariable:
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
 
+    window_width = 320
+    window_height = 480
+
     color_1 = "#71B0B0" # background color
     color_2 = "#FFB268" # button background color
     color_3 = "#000000" # text color
@@ -70,14 +74,14 @@ class WindowVariable:
 w_var = WindowVariable()
 
 all_shortcut = load_shortcuts()
-KeyLoggerApp.stop_key = all_shortcut["stop_key"]
-KeyPoisiton.pos_key_sc = all_shortcut["key_pos"]
+KeyLoggerApp.stop_key = all_shortcut[ShortCut.STOP]
+KeyPositon.pos_key_sc = all_shortcut[ShortCut.CAPTURE]
 
 
 # Je crée une fonction pour passer d'un menu à l'autre.
 # --------------------------------------------------------
 # I create a function to switch from one menue to another.
-def frame_exchanger(frame):
+def switch_frame(frame):
     global frm_now
     global ui_act_manager
     global ui_action_tree
@@ -188,7 +192,13 @@ def reset():
 # restarting the program, to avoid having to restart it.They can also 
 # save their sequence of actions for later, as well as modify it by 
 # deleting or changing elements.
-ui_action_tree = IntfTree(window, menu_bt_frm, frame_exchanger, w_var, reset)
+ui_action_tree = IntfTree(
+    window, 
+    menu_bt_frm, 
+    switch_frame, 
+    w_var, 
+    reset
+    )
 
 # Je crée une instance de "IntfActSelector" qui va créer son bouton dans 
 # "menu_bt_frm" pour accéder à son propre cadre. "IntfActSelector" permet à 
@@ -197,12 +207,33 @@ ui_action_tree = IntfTree(window, menu_bt_frm, frame_exchanger, w_var, reset)
 # I create an instance of "IntfActSelector" which will create its button in 
 # "menu_bt_frm" to access its own frame. "IntfActSelector" allows the user to create 
 # their actions and start the execution of the action sequence.
-ui_act_manager = IntfActSelector(window, menu_bt_frm, frame_exchanger, w_var, ui_action_tree)
+ui_act_manager = IntfActSelector(
+    window, 
+    menu_bt_frm, 
+    switch_frame, 
+    w_var, 
+    ui_action_tree
+    )
 
 
-intf_open = IntfOpenFile(window, menu_bt_frm, frame_exchanger, w_var, reset,
-                           ui_act_manager.act_dict_manager, ui_act_manager.container_manager.leave_current_container, ui_act_manager.container_manager, ui_act_manager.same_time_inst)
-ui_documentation = IntfDoc(window, menu_bt_frm, frame_exchanger, w_var)
+intf_open = SavedSequencesUI(
+    window, 
+    menu_bt_frm, 
+    switch_frame, 
+    w_var, 
+    reset, 
+    ui_act_manager.act_dict_manager, 
+    ui_act_manager.container_manager.leave_current_container, 
+    ui_act_manager.container_manager
+    )
+
+
+ui_documentation = DocumentationUI(
+    window, 
+    menu_bt_frm, 
+    switch_frame, 
+    w_var
+    )
 
 
 ui_action_tree.ui_act_manager = ui_act_manager

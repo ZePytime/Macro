@@ -1,6 +1,6 @@
-from sequence_saver import save
+from sequence_manager import save_sequence
 from scrollbarre import ScrollableFrame
-from action_classes import ClickRight, ClickLeft, Write, KeyPress, Wait, Loop, Move, Scroll, KeyLoggerApp, SameTime, KeyPoisiton, position_mouse
+from action_classes import ClickRight, ClickLeft, Write, KeyPress, Wait, Loop, Move, Scroll, KeyLoggerApp, SameTime, KeyPositon, position_mouse
 import tkinter as tk
 
 from ui_action_frames.ui_move_frame import MouseMoveFrame
@@ -15,19 +15,19 @@ from ui_action_frames.ui_parallel_actions_frame import ParallelActionsFrame
 
 class IntfTree:
         
-    def __init__(self, window, menu_bt_frame, frame_exchanger, w_var, reset):
+    def __init__(self, window: tk.Tk, menu_btn_frame, switch_frame, w_var, reset):
         """
-        Cette classe prend en paramètre "window", la fenêtre de l'interface, "menu_bt_frame", qui est la 
+        Cette classe prend en paramètre "window", la fenêtre de l'interface, "menu_btn_frame", qui est la 
         frame dans laquelle on va placer le bouton permettant d'accéder à la frame de la classe, 
-        "frame_exchanger", qui permet de changer de frame et sera utilisée par le bouton dans 
-        "menu_bt_frame", "w_var" la dataclass qui contient toutes les variables pour les widgets, 
+        "switch_frame", qui permet de changer de frame et sera utilisée par le bouton dans 
+        "menu_btn_frame", "w_var" la dataclass qui contient toutes les variables pour les widgets, 
         comme les couleurs. "reset" permet de réinitialiser les valeurs comme si l'on venait de démarrer 
         le programme.
         ------------------------------------------------------------------------------------------------
-        This class takes the following parameters: "window", the interface window; "menu_bt_frame", 
+        This class takes the following parameters: "window", the interface window; "menu_btn_frame", 
         which is the frame where the button that allows access to the class's frame will be placed; 
-        "frame_exchanger", which allows switching between frames and will be used by the button in 
-        "menu_bt_frame"; "w_var", the dataclass that contains all the variables for the widgets, such 
+        "switch_frame", which allows switching between frames and will be used by the button in 
+        "menu_btn_frame"; "w_var", the dataclass that contains all the variables for the widgets, such 
         as colors; and "reset", which allows resetting the values as if the program had just started.
         """
 
@@ -76,14 +76,14 @@ class IntfTree:
         # Bouton permettant d’accéder à l'interface de "IntfTree".
         # --------------------------------------------------
         # Button to access the "IntfTree" interface.
-        tree_bt = tk.Button(menu_bt_frame, 
+        tree_bt = tk.Button(menu_btn_frame, 
                             text="tree", 
                             bg=w_var.color_2, 
                             fg=w_var.color_3, 
                             height=1, 
                             width=5, 
                             font=w_var.font_size, 
-                            command=lambda : frame_exchanger(self.tree_main_frame)
+                            command=lambda : switch_frame(self.tree_main_frame)
                             )
         tree_bt.grid(row=0, column=1)
 
@@ -1039,7 +1039,7 @@ class IntfTree:
         """
 
         if not self.ui_act_manager.act_dict_manager.is_running:
-            msg_error = save(self.name_entry.get(), self.ui_act_manager.act_dict_manager.save_list)
+            msg_error = save_sequence(self.name_entry.get(), self.ui_act_manager.act_dict_manager.save_list)
             if msg_error == True:
                 self.upd_save_wdgt()
                 self.error_label.grid_remove()
@@ -1142,7 +1142,7 @@ class IntfTree:
             self.frame_click.grid(row=0, column=0)####################
             
             
-            self.tkt = KeyPoisiton(self.click_inst.set_coordinate, self.move_inst.set_coordinate)
+            self.tkt = KeyPositon(self.click_inst.set_coordinate, self.move_inst.set_coordinate)
             self.is_in_move_click = True
             self.update_positions()
 
@@ -1152,7 +1152,7 @@ class IntfTree:
                 self.move_inst.set_coordinate((element.pos_x, element.pos_y), "xy")
                 self.move_inst.set_movement_type(element.movement_type)
                 self.frame_move.grid(row=0, column=0)
-                self.tkt = KeyPoisiton(self.click_inst.set_coordinate, self.move_inst.set_coordinate)
+                self.tkt = KeyPositon(self.click_inst.set_coordinate, self.move_inst.set_coordinate)
 
                 self.is_in_move_click = True
                 self.update_positions()

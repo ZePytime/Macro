@@ -4,12 +4,12 @@ import tkinter as tk
 from typing import TYPE_CHECKING, Tuple, Union
 from functools import partial
 
+from enums import Direction
 
 if TYPE_CHECKING:
     from main import WindowVariable
 
 
-from ui_action_frames.enums import Direction
 
 
 

@@ -7,7 +7,7 @@ import tkinter as tk
 
 
 class ActionDict:
-    def __init__(self, window, get_most_nested_container, inter_tree):
+    def __init__(self, window: tk.Tk, get_most_nested_container, inter_tree):
         self.window = window
 
 

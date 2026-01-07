@@ -1,7 +1,7 @@
 import tkinter as tk
 import pydirectinput
 
-from ui_action_frames.enums import MovementType, Direction
+from enums import MovementType, Direction
 
 from pynput.keyboard import Key, Controller
 keyboard = Controller()
@@ -52,7 +52,7 @@ def position_mouse():
 
 
 
-class KeyPoisiton:
+class KeyPositon:
     """
     Cette classe permet de capturer la position de la souris de l'utilisateur dans
     "click right", "click left", "move" lorsque l'utilisateur clique simultanément 
@@ -90,7 +90,7 @@ class KeyPoisiton:
         # ------------------------------------------------------------
         # We set "is_listening" to "True" to indicate that we are 
         # observing the pressed keys.
-        KeyPoisiton.is_listening = True
+        KeyPositon.is_listening = True
 
         # On récupère la fonction qui permet d'inscrire la position 
         # de la souris dans "click right", "click left", et "move".
@@ -141,12 +141,12 @@ class KeyPoisiton:
         except AttributeError:
             key_char = None
         
-        if key_char in KeyPoisiton.pos_key_sc:
+        if key_char in KeyPositon.pos_key_sc:
             self.key_pos.add(key_char)
 
 
-        if len(self.key_pos) == len(KeyPoisiton.pos_key_sc):
-            for element in KeyPoisiton.pos_key_sc:
+        if len(self.key_pos) == len(KeyPositon.pos_key_sc):
+            for element in KeyPositon.pos_key_sc:
                 self.key_pos.remove(element)
             self.set_coordinate_click(mouse.position, "xy")
             self.set_coordinate_move(mouse.position, "xy")
@@ -185,7 +185,7 @@ class KeyPoisiton:
         This function stops monitoring key presses and releases.
         """
 
-        KeyPoisiton.is_listening = False
+        KeyPositon.is_listening = False
         self.listener.stop()
 
 
@@ -966,7 +966,7 @@ class Loop:
     ->"text": Returns the shortest possible string to identify the action.
     """
 
-    def __init__(self, window, nb_turns:int, name:str):
+    def __init__(self, window: tk.Tk, nb_turns:int, name:str):
         """ 
         On prend en paramètre la fenêtre de l'interface, le nombre d'exécutions que la boucle doit effectuer avec 
         la suite d'actions, ainsi que le nom de la boucle.
@@ -1361,7 +1361,7 @@ class SameTime:
     -> text: returns the shortest possible string to identify the action.
     """
 
-    def __init__(self, window, keys:str, list_sp_keys:list, name:str):
+    def __init__(self, window: tk.Tk, keys:str, list_sp_keys:list, name:str):
         """ 
         On prend en paramètre la fenêtre de l'interface, les touches à presser, 
         puis les touches spéciales à presser pendant l'exécution de la suite d'actions, 

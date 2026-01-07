@@ -4,9 +4,9 @@ import tkinter as tk
 from typing import TYPE_CHECKING, Tuple, Union
 from functools import partial
 
-
 if TYPE_CHECKING:
     from main import WindowVariable
+
 
 MIN_WAIT_DURATION = 0.001  # 1 ms minimum (au moins une vraie attente)
 MAX_WAIT_DURATION = 604800  # 7 days in seconds

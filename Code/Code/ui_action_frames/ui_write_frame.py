@@ -4,10 +4,10 @@ import tkinter as tk
 from typing import TYPE_CHECKING, Tuple, Union
 from functools import partial
 
-
 if TYPE_CHECKING:
     from main import WindowVariable
     from container_manager import ContainerManager
+
 
 MAX_WRITE_LENGTH = 10000000
 
@@ -90,7 +90,7 @@ class WriteFrame:
         :return: False if the text is invalid, otherwise a list containing the text.
         """
 
-        content = self._text_area.get("1.0", "end-1c")
+        content = self.text_area.get("1.0", "end-1c")
 
         if len(content) == 0:
             self._show_error("You must enter some text", 1)

@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from action_classes import KeyPoisiton, position_mouse
+from action_classes import KeyPositon, position_mouse
 
 from ui_action_frames.ui_move_frame import MouseMoveFrame
 from ui_action_frames.ui_click_frame import ClickFrame
@@ -20,18 +20,18 @@ from container_manager import ContainerManager
 
 class IntfActSelector:
 
-    def __init__(self, window, menu_bt_frame, frame_exchanger, w_var, ui_action_tree):
+    def __init__(self, window: tk.Tk, menu_btn_frame, switch_frame, w_var, ui_action_tree):
         """
-        Cette classe prend en paramètre "window", la fenêtre de l'interface, "menu_bt_frame", qui est la 
+        Cette classe prend en paramètre "window", la fenêtre de l'interface, "menu_btn_frame", qui est la 
         frame dans laquelle on va placer le bouton permettant d'accéder à la frame de la classe, 
-        "frame_exchanger", qui permet de changer de frame et sera utilisée par le bouton dans 
-        "menu_bt_frame", "w_var" la dataclass qui contient toutes les variables pour les widgets, comme 
+        "switch_frame", qui permet de changer de frame et sera utilisée par le bouton dans 
+        "menu_btn_frame", "w_var" la dataclass qui contient toutes les variables pour les widgets, comme 
         les couleurs, "ui_action_tree" l'instance de "IntfTree" nécessaire pour pouvoir créer une instance de 
         "ActionDict".
         ------------------------------------------------------------------------------------------------
-        This class takes "window", the interface window, as a parameter, "menu_bt_frame", which is the 
-        frame where we will place the button to access the class frame, "frame_exchanger", which allows 
-        changing frames and will be used by the button in "menu_bt_frame", "w_var", the dataclass that 
+        This class takes "window", the interface window, as a parameter, "menu_btn_frame", which is the 
+        frame where we will place the button to access the class frame, "switch_frame", which allows 
+        changing frames and will be used by the button in "menu_btn_frame", "w_var", the dataclass that 
         contains all the variables for the widgets, like colors, and "ui_action_tree", the instance of 
         "IntfTree" needed to create an instance of "ActionDict".
         """
@@ -43,14 +43,14 @@ class IntfActSelector:
         # Bouton permettant d’accéder à l'interface de "IntfActSelector".
         # --------------------------------------------------
         # Button to access the "IntfActSelector" interface.
-        act_selector_button = tk.Button(menu_bt_frame, 
+        act_selector_button = tk.Button(menu_btn_frame, 
                                         text="selector", 
                                         bg=w_var.color_2, 
                                         fg="black", 
                                         height=1, 
                                         width=5, 
                                         font=w_var.font_size, 
-                                        command=lambda : frame_exchanger(self.act_selector_frame)
+                                        command=lambda : switch_frame(self.act_selector_frame)
                                         )
         act_selector_button.grid(row=0, column=0)
 
@@ -181,7 +181,7 @@ class IntfActSelector:
         # releases and presses so that if the user presses the two corresponding keys, 
         # "set_coordinate" is called, which will input the given coordinates into the 
         # corresponding input fields.
-        self.tkt = KeyPoisiton(self.click_inst.set_coordinate, self.move_inst.set_coordinate)
+        self.tkt = KeyPositon(self.click_inst.set_coordinate, self.move_inst.set_coordinate)
 
 
 
@@ -341,9 +341,9 @@ class IntfActSelector:
         if key == "move" or key == "click l" or key == "click r":
             self.is_in_move_click = True
             
-            if not KeyPoisiton.is_listening:
+            if not KeyPositon.is_listening:
                 self.update_positions()
-                self.tkt = KeyPoisiton(self.click_inst.set_coordinate, self.move_inst.set_coordinate)
+                self.tkt = KeyPositon(self.click_inst.set_coordinate, self.move_inst.set_coordinate)
 
         # Vu que l'interface choisie par l'utilisateur n'est ni celle de mouvement ou de 
         # clic droit ou gauchee, on appelle "stop_listening" si nécessaire.
@@ -352,7 +352,7 @@ class IntfActSelector:
         # the right or left click interface, we call "stop_listening" if necessary.
         else:
             self.is_in_move_click = False
-            if KeyPoisiton.is_listening:
+            if KeyPositon.is_listening:
                 self.tkt.stop_listening()
 
 

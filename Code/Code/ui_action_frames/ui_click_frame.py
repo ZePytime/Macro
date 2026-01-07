@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import tkinter as tk
 from typing import TYPE_CHECKING, Tuple, Union
+from functools import partial
 
 if TYPE_CHECKING:
     from main import WindowVariable

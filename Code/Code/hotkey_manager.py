@@ -1,15 +1,20 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Tuple, Union
+from functools import partial
 import pickle 
 from pathlib import Path
 import pickle
 from typing import Dict, List
+from enums import ShortCut
+
 # Configuration et constantes
 # ---------------------------
 # Configuration and constants
-SHORTCUTS_FILE = Path("Code/Data/shortcuts.pkl")  # chemin du fichier de sauvegarde (binaire pickle)
-DEFAULT_TYPES = ("stop_key", "key_pos")           # types de raccourcis acceptés
+SHORTCUTS_PATH = Path("Code/Data/shortcuts.pkl")  # chemin du fichier de sauvegarde (binaire pickle)
 DEFAULT_SHORTCUTS: Dict[str, List[str]] = {
-    "stop_key": ["y", "j"],
-    "key_pos": ["x", "v"],
+    ShortCut.STOP: ["y", "j"],
+    ShortCut.CAPTURE: ["x", "v"],
 }
 
 # Chargement / validation / sauvegarde des raccourcis
@@ -30,10 +35,10 @@ def load_shortcuts() -> Dict[str, List[str]]:
     # Assurer que le répertoire existe
     # --------------------------------
     # Ensure the directory exists
-    SHORTCUTS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    SHORTCUTS_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     try:
-        with SHORTCUTS_FILE.open("rb") as f:
+        with SHORTCUTS_PATH.open("rb") as f:
             data = pickle.load(f)
     except Exception:
         # Fichier manquant ou corrompu -> recréer avec les val;eurs par défaut
@@ -50,7 +55,7 @@ def load_shortcuts() -> Dict[str, List[str]]:
         return DEFAULT_SHORTCUTS.copy()
 
     for key, values in data.items():
-        if key not in DEFAULT_TYPES or not isinstance(values, list):
+        if key != ShortCut.STOP and key != ShortCut.CAPTURE or not isinstance(values, list):
             reset_shortcuts_to_defaults()
             return DEFAULT_SHORTCUTS.copy()
         for v in values:
@@ -67,8 +72,8 @@ def reset_shortcuts_to_defaults() -> None:
     -------------------------------------------------------------------------
     Reset the shortcuts file by writing the default values.
     """
-    SHORTCUTS_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with SHORTCUTS_FILE.open("wb") as f:
+    SHORTCUTS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with SHORTCUTS_PATH.open("wb") as f:
         pickle.dump(DEFAULT_SHORTCUTS.copy(), f, protocol=pickle.HIGHEST_PROTOCOL)
 
 
@@ -86,7 +91,7 @@ def save_shortcuts(shortcut_type: str, keys: List[str]) -> None:
     :param shortcut_type: str - type of the shortcut
     :param keys: List[str] - list of keys
     """
-    if shortcut_type not in DEFAULT_TYPES:
+    if shortcut_type != ShortCut.STOP and shortcut_type != ShortCut.CAPTURE:
         raise ValueError(f"Unknown shortcut type: {shortcut_type}")
 
     if not isinstance(keys, list) or not all(isinstance(k, str) and len(k) == 1 for k in keys):
@@ -95,6 +100,7 @@ def save_shortcuts(shortcut_type: str, keys: List[str]) -> None:
     shortcuts = load_shortcuts()
     shortcuts[shortcut_type] = keys
 
-    SHORTCUTS_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with SHORTCUTS_FILE.open("wb") as f:
+    SHORTCUTS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with SHORTCUTS_PATH.open("wb") as f:
         pickle.dump(shortcuts, f, protocol=pickle.HIGHEST_PROTOCOL)
+        

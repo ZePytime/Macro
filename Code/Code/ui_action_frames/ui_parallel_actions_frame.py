@@ -4,10 +4,10 @@ import tkinter as tk
 from typing import TYPE_CHECKING, Tuple, Union
 from functools import partial
 
-
 if TYPE_CHECKING:
     from main import WindowVariable
     from container_manager import ContainerManager
+
 
 # Tuple de toutes les touches spéciales disponibles
 # --------------------------------------------------

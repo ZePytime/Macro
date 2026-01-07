@@ -3,8 +3,9 @@ from __future__ import annotations
 
 import tkinter as tk
 from typing import TYPE_CHECKING, Tuple, Union
-from ui_action_frames.enums import MovementType
 from functools import partial
+
+from enums import MovementType
 
 if TYPE_CHECKING:
     from main import WindowVariable
